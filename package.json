@@ -1,0 +1,32 @@
+{
+  "name": "stork",
+  "version": "1.0.0",
+  "description": "Static site generator using Parcel, Pug, TypeScript and SASS",
+  "main": "dist/index.js",
+  "repository": "git@github.com:peakwinter/stork.git",
+  "author": "Jacob Cook <jacob@peakwinter.net>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "markdown-it": "^8.4.2",
+    "oclif": "^1.13.1",
+    "parcel-bundler": "^1.12.3",
+    "pug": "^2.0.3"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^0.0.7",
+    "@types/node": "^11.11.8",
+    "@types/parcel-bundler": "^1.10.2",
+    "@types/pug": "^2.0.4",
+    "ts-node": "^8.0.3",
+    "tslint": "^5.14.0",
+    "tslint-config-airbnb": "^5.11.1",
+    "typescript": "^3.3.4000"
+  },
+  "scripts": {
+    "lint": "tslint --project .",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "start:dev": "ts-node-dev src/index.ts"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "outDir": "dist",
+    "preserveConstEnums": true,
+    "removeComments": true,
+    "rootDirs": ["src"],
+    "sourceMap": false,
+    "strictNullChecks": true,
+    "target": "es2017",
+    "downlevelIteration": true,
+    "baseUrl": "."
+  },
+  "exclude": [
+    "node_modules", "typings"
+  ],
+  "include": [
+    "types/**/*.ts",
+    "src/**/*.ts"
+  ]
+}
