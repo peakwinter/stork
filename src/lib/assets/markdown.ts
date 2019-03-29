@@ -1,3 +1,5 @@
+import path from 'path';
+
 import Asset from 'parcel-bundler/lib/Asset';
 import localRequire from 'parcel-bundler/lib/utils/localRequire';
 
@@ -21,8 +23,23 @@ class MarkdownAsset extends Asset {
   async generate() {
     const MarkdownIt = await localRequire('markdown-it', this.name);
     const markdown = new MarkdownIt() as markdownit;
+    const pug = await localRequire('pug', this.name);
+    const markdownOutput = markdown.render(this.contents);
 
-    return markdown.render(this.contents);
+    if (this.frontMatter && this.frontMatter.template) {
+      // This file depends on a Pug template. Render its contents in that template
+      const pugContentBlock =
+        `extends ../templates/${this.frontMatter.template}\n\nblock content\n\t!=content`;
+      const compiled = pug.compile(pugContentBlock, {
+        filename: this.name,
+        basedir: path.dirname(this.name),
+        templateName: path.basename(this.basename, path.extname(this.basename)),
+        compileDebug: false,
+      });
+      return compiled({ content: markdownOutput });
+    }
+
+    return markdownOutput;
   }
 }
 
