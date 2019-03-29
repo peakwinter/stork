@@ -8,16 +8,21 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
+    "@oclif/command": "^1.5.12",
+    "@oclif/config": "^1.12.12",
+    "@oclif/plugin-help": "^2.1.6",
     "markdown-it": "^8.4.2",
-    "oclif": "^1.13.1",
     "parcel-bundler": "^1.12.3",
     "pug": "^2.0.3"
   },
   "devDependencies": {
+    "@oclif/dev-cli": "^1.22.0",
+    "@oclif/tslint": "^3.1.1",
     "@types/markdown-it": "^0.0.7",
     "@types/node": "^11.11.8",
     "@types/parcel-bundler": "^1.10.2",
     "@types/pug": "^2.0.4",
+    "globby": "^9.1.0",
     "ts-node": "^8.0.3",
     "tslint": "^5.14.0",
     "tslint-config-airbnb": "^5.11.1",
@@ -27,6 +32,24 @@
     "lint": "tslint --project .",
     "build": "tsc",
     "start": "node dist/index.js",
-    "start:dev": "ts-node --files src/index.ts"
-  }
+    "start:dev": "ts-node --files src/index.ts",
+    "postpack": "rm -f oclif.manifest.json",
+    "posttest": "tslint -p . -t stylish",
+    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "test": "echo NO TESTS",
+    "version": "oclif-dev readme && git add README.md"
+  },
+  "oclif": {
+    "commands": "./dist/commands",
+    "bin": "stork",
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
+  },
+  "files": [
+    "/bin",
+    "/lib",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ]
 }
