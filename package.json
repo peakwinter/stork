@@ -27,6 +27,6 @@
     "lint": "tslint --project .",
     "build": "tsc",
     "start": "node dist/index.js",
-    "start:dev": "ts-node src/index.ts"
+    "start:dev": "ts-node --files src/index.ts"
   }
 }

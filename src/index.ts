@@ -1,7 +1,7 @@
-import * as fs from 'fs';
-import * as Bundler from 'parcel-bundler';
-import * as path from 'path';
-import * as util from 'util';
+import fs from 'fs';
+import Bundler from 'parcel-bundler';
+import path from 'path';
+import util from 'util';
 
 const fsReaddir = util.promisify(fs.readdir);
 const fsStat = util.promisify(fs.stat);
@@ -39,8 +39,8 @@ async function buildEntrypoints(directory: string) {
 async function build(sitePath: string) {
   const outDir = path.join(sitePath, 'dist');
   const entryFiles = [
-    path.join(sitePath, 'index.pug'),
-    ...await buildEntrypoints(path.join(sitePath, 'pages')),
+    path.join(sitePath, './index.pug'),
+    ...await buildEntrypoints(path.join(sitePath, './pages')),
   ];
   const options: Bundler.ParcelOptions = {
     outDir,
@@ -53,6 +53,8 @@ async function build(sitePath: string) {
   };
 
   const bundler = new Bundler(entryFiles, options);
+  bundler.addAssetType('.pug', require.resolve('./lib/assets/pug'));
+
   await bundler.bundle();
   // or serve with
   // await bundler.serve();
