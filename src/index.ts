@@ -1,46 +1,13 @@
-import fs from 'fs';
 import Bundler from 'parcel-bundler';
 import path from 'path';
-import util from 'util';
-
-const fsReaddir = util.promisify(fs.readdir);
-const fsStat = util.promisify(fs.stat);
-
-/** Walk a directory and obtain all of its subdirectories and files recursively. */
-async function walk(dir: string): Promise<string[]> {
-  const results: string[] = [];
-  const dirListing = await fsReaddir(dir);
-  for (const item of dirListing) {
-    const itemPath = path.join(dir, item);
-    const stats = await fsStat(itemPath);
-    if (stats.isDirectory()) {
-      results.concat(await walk(itemPath));
-    } else if (stats.isFile()) {
-      results.push(itemPath);
-    }
-  }
-  return results;
-}
-
-/** Scour the local directory and find all files that could be considered entrypoints (all pages) */
-async function buildEntrypoints(directory: string) {
-  const directoryName = directory || __dirname;
-  const files = await walk(directoryName);
-  const pugFiles: string[] = [];
-  for (const item of files) {
-    if (path.parse(item).ext === '.pug') {
-      pugFiles.push(item);
-    }
-  }
-  return pugFiles;
-}
 
 /** Build the site. */
 async function build(sitePath: string) {
   const outDir = path.join(sitePath, 'dist');
   const entryFiles = [
     path.join(sitePath, './index.pug'),
-    ...await buildEntrypoints(path.join(sitePath, './pages')),
+    path.join(sitePath, './pages/**/*.pug'),
+    path.join(sitePath, './posts/**/*.md'),
   ];
   const options: Bundler.ParcelOptions = {
     outDir,
@@ -54,6 +21,7 @@ async function build(sitePath: string) {
 
   const bundler = new Bundler(entryFiles, options);
   bundler.addAssetType('.pug', require.resolve('./lib/assets/pug'));
+  bundler.addAssetType('.md', require.resolve('./lib/assets/markdown'));
 
   await bundler.bundle();
   // or serve with
