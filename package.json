@@ -11,6 +11,8 @@
     "@oclif/command": "^1.5.12",
     "@oclif/config": "^1.12.12",
     "@oclif/plugin-help": "^2.1.6",
+    "gray-matter": "^4.0.2",
+    "js-yaml": "^3.13.0",
     "markdown-it": "^8.4.2",
     "parcel-bundler": "^1.12.3",
     "pug": "^2.0.3"

@@ -11,6 +11,7 @@ export default async function build(sitePath: string) {
   ];
   const options: Bundler.ParcelOptions = {
     outDir,
+    cache: false,
     watch: false, // Whether to watch the files and rebuild them on change, defaults to process.env.NODE_ENV !== 'production'
     contentHash: false, // Disable content hash from being included on the filename
     minify: false, // Minify files, enabled if process.env.NODE_ENV === 'production'
