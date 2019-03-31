@@ -1,5 +1,5 @@
-import Bundler from 'parcel-bundler';
 import path from 'path';
+import Bundler from 'parcel-bundler';
 
 /** Build the site. */
 export default async function build(sitePath: string) {

@@ -1,8 +1,9 @@
 import path from 'path';
-import Asset from 'parcel-bundler/lib/Asset';
 import localRequire from 'parcel-bundler/lib/utils/localRequire';
 
-class PugAsset extends Asset {
+import StorkAsset from '.';
+
+class PugAsset extends StorkAsset {
   constructor(name: string, options: object) {
     super(name, options);
     this.type = 'html';
@@ -38,7 +39,7 @@ class PugAsset extends Asset {
       }
     }
 
-    return compiled(config.locals);
+    return compiled(this.getRenderingContext(config.locals));
   }
 }
 

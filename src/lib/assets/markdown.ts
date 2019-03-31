@@ -1,11 +1,9 @@
 import path from 'path';
-
-import Asset from 'parcel-bundler/lib/Asset';
 import localRequire from 'parcel-bundler/lib/utils/localRequire';
 
-class MarkdownAsset extends Asset {
-  frontMatter: { [k: string]: string; };
+import StorkAsset from '.';
 
+class MarkdownAsset extends StorkAsset {
   constructor(name: string, options: object) {
     super(name, options);
     this.type = 'html';
@@ -36,7 +34,7 @@ class MarkdownAsset extends Asset {
         templateName: path.basename(this.basename, path.extname(this.basename)),
         compileDebug: false,
       });
-      return compiled({ content: markdownOutput });
+      return compiled({ ...this.getRenderingContext(), content: markdownOutput });
     }
 
     return markdownOutput;
