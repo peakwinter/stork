@@ -12,11 +12,11 @@ Static site generator based on Parcel, Pug, Typescript and SASS
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install -g stork
+$ npm install -g stork-ssg
 $ stork COMMAND
 running command...
 $ stork (-v|--version|version)
-stork/1.0.0 darwin-x64 node-v10.15.3
+stork-ssg/1.0.2 darwin-x64 node-v10.15.3
 $ stork --help [COMMAND]
 USAGE
   $ stork COMMAND
@@ -45,7 +45,7 @@ EXAMPLE
   ✨  Built in 358ms.
 ```
 
-_See code: [dist/commands/build.ts](https://github.com/peakwinter/stork/blob/v1.0.0/dist/commands/build.ts)_
+_See code: [dist/commands/build.ts](https://github.com/peakwinter/stork/blob/v1.0.2/dist/commands/build.ts)_
 
 ## `stork help [COMMAND]`
 

@@ -1,6 +1,6 @@
 {
-  "name": "stork",
-  "version": "1.0.0",
+  "name": "stork-ssg",
+  "version": "1.0.2",
   "description": "Static site generator using Parcel, Pug, TypeScript and SASS",
   "main": "dist/index.js",
   "repository": "git@github.com:peakwinter/stork.git",
@@ -8,7 +8,7 @@
   "license": "MIT",
   "private": false,
   "bin": {
-    "stork": "./bin/run"
+    "stork": "./bin/run.js"
   },
   "dependencies": {
     "@oclif/command": "^1.5.12",
@@ -45,7 +45,7 @@
     "start:dev": "ts-node --files src/index.ts",
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "tslint -p . -t stylish",
-    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "prepack": "rm -rf dist && tsc -b && oclif-dev manifest && oclif-dev readme",
     "test": "echo NO TESTS",
     "version": "oclif-dev readme && git add README.md"
   },
@@ -58,8 +58,7 @@
   },
   "files": [
     "/bin",
-    "/lib",
-    "/npm-shrinkwrap.json",
+    "/dist",
     "/oclif.manifest.json"
   ]
 }
