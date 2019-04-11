@@ -7,6 +7,9 @@
   "author": "Jacob Cook <jacob@peakwinter.net>",
   "license": "MIT",
   "private": false,
+  "bin": {
+    "stork": "./bin/run"
+  },
   "dependencies": {
     "@oclif/command": "^1.5.12",
     "@oclif/config": "^1.12.12",
