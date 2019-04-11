@@ -1,45 +1,58 @@
+import fs from 'fs-extra';
 import path from 'path';
-import localRequire from 'parcel-bundler/lib/utils/localRequire';
+import pLimit from 'p-limit';
+import pug from 'pug';
+import grayMatter from 'gray-matter';
+import markdownIt from 'markdown-it';
 
-import StorkAsset from '.';
+import { getRenderingContext, RenderingContext } from '../utils';
+import { BuildOptions } from '../config';
 
-class MarkdownAsset extends StorkAsset {
-  constructor(name: string, options: object) {
-    super(name, options);
-    this.type = 'html';
-    this.hmrPageReload = true;
+export async function buildMarkdownFile(
+  filePath: string,
+  baseDir: string,
+  outputDir: string,
+  context?: RenderingContext,
+): Promise<void> {
+  const markdown = new markdownIt();
+  const fullPath = path.join(baseDir, filePath);
+  const contents = await fs.readFile(fullPath, { encoding: 'utf8' });
+
+  const parsed = grayMatter(contents);
+  let compiled = markdown.render(parsed.content);
+
+  if (parsed.data && parsed.data.template) {
+    // This file depends on a Pug template. Render its contents in that template
+    compiled = `\n\t${compiled.split('\n').join('\n\t')}`;
+    const pugContentBlock =
+      `extends ../templates/${parsed.data.template}\n\nblock content\n\t!=content`;
+    const compiler = pug.compile(pugContentBlock, {
+      filename: fullPath,
+      basedir: path.dirname(fullPath),
+      pretty: true,
+      compileDebug: false,
+    });
+    compiled = compiler({
+      ...(context || {}),
+      page: {
+        ...(context ? context.page : {}),
+        ...parsed.data,
+      },
+      content: compiled,
+    });
   }
 
-  async transform() {
-    // Obtain the front matter for this post (if any)
-    const matter = await localRequire('gray-matter', this.name);
-    const output = matter(this.contents);
-    this.contents = output.content;
-    this.frontMatter = output.data;
-  }
-
-  async generate() {
-    const MarkdownIt = await localRequire('markdown-it', this.name);
-    const markdown = new MarkdownIt() as markdownit;
-    const pug = await localRequire('pug', this.name);
-    const markdownOutput = markdown.render(this.contents);
-
-    if (this.frontMatter && this.frontMatter.template) {
-      // This file depends on a Pug template. Render its contents in that template
-      const pugContentBlock =
-        `extends ../templates/${this.frontMatter.template}\n\nblock content\n\t!=content`;
-      const compiled = pug.compile(pugContentBlock, {
-        filename: this.name,
-        basedir: path.dirname(this.name),
-        templateName: path.basename(this.basename, path.extname(this.basename)),
-        compileDebug: false,
-      });
-      return compiled({ ...this.getRenderingContext(), content: markdownOutput });
-    }
-
-    return markdownOutput;
-  }
+  await fs.ensureDir(path.join(outputDir, path.dirname(filePath)));
+  await fs.writeFile(
+    path.join(outputDir, filePath.replace(path.extname(filePath), '.html')), compiled,
+  );
 }
 
-// Parcel expects single-object imports when running builds and importing assets/plugins.
-export = MarkdownAsset;
+export async function buildMarkdown(paths: string[], options: BuildOptions) {
+  const mdPool = pLimit(3);
+  const context = getRenderingContext(options.config, options.plugins);
+  const input = paths.map(filePath =>
+    mdPool(() => buildMarkdownFile(filePath, options.baseDir, options.outputDir, context)),
+  );
+  await Promise.all(input);
+}

@@ -1,30 +1,68 @@
+import fs from 'fs-extra';
+import glob from 'fast-glob';
 import path from 'path';
 import Bundler from 'parcel-bundler';
 
+import { loadConfig, loadPlugins } from './config';
+import { buildPug } from './assets/pug';
+import { buildMarkdown } from './assets/markdown';
+
 /** Build the site. */
 export default async function build(sitePath: string) {
-  const outDir = path.join(path.resolve(sitePath), 'dist');
+  const absolutePath = path.resolve(sitePath);
+  const outDir = path.join(absolutePath, 'dist');
+  await fs.ensureDir(outDir);
+
+  // Load config and plugins
+  const configPath = path.join(sitePath, 'stork.yaml');
+  const config = await loadConfig(configPath, sitePath);
+  const plugins = await loadPlugins(config);
+
+  // Fetch paths for building pug pages (index and site pages)
+  const pugPaths = await glob<string>(
+    ['./index.pug', './pages/**/*.pug'],
+    { cwd: sitePath, onlyFiles: true },
+  );
+  const mdPaths = await glob<string>('./posts/**/*.md', { cwd: sitePath, onlyFiles: true });
+
+  // Create temporary directory for pre-processing Pug and Markdown files
+  const tmpDir = path.join(outDir, '.tmp');
+  await fs.remove(tmpDir);
+  await fs.ensureDir(tmpDir);
+
+  // Build pug pages
+  console.log('Building index and pages...');
+  await buildPug(pugPaths, { config, plugins, baseDir: absolutePath, outputDir: tmpDir });
+  // Build Markdown pages
+  console.log('Building blog posts...');
+  await buildMarkdown(mdPaths, { config, plugins, baseDir: absolutePath, outputDir: tmpDir });
+
+  // Symlink assets into tmp dir so Parcel will properly link them
+  await fs.symlink(path.join(absolutePath, 'assets'), path.join(tmpDir, 'assets'));
+
+  // Build assets and final site package using Parcel
   const entryFiles = [
-    path.join(sitePath, './index.pug'),
-    path.join(sitePath, './pages/**/*.pug'),
-    path.join(sitePath, './posts/**/*.md'),
+    path.join(tmpDir, './index.html'),
+    path.join(tmpDir, './pages/**/*.html'),
+    path.join(tmpDir, './posts/**/*.html'),
   ];
   const options: Bundler.ParcelOptions = {
     outDir,
     cache: false,
-    watch: false, // Whether to watch the files and rebuild them on change, defaults to process.env.NODE_ENV !== 'production'
-    contentHash: false, // Disable content hash from being included on the filename
-    minify: false, // Minify files, enabled if process.env.NODE_ENV === 'production'
-    logLevel: 3, // 5 = save everything to a file, 4 = like 3, but with timestamps and additionally log http requests to dev server, 3 = log info, warnings & errors, 2 = log warnings & errors, 1 = log errors
-    hmrPort: 0, // The port the HMR socket runs on, defaults to a random free port (0 in node.js resolves to a random free port)
-    sourceMaps: true // Enable or disable sourcemaps, defaults to enabled (minified builds currently always create sourcemaps)
+    watch: false,
+    contentHash: false,
+    minify: false,
+    logLevel: 3,
+    hmrPort: 0,
+    sourceMaps: true,
   };
 
   const bundler = new Bundler(entryFiles, options);
-  bundler.addAssetType('.pug', require.resolve('./assets/pug'));
-  bundler.addAssetType('.md', require.resolve('./assets/markdown'));
 
+  console.log('Building assets...');
   await bundler.bundle();
+
+  await fs.remove(tmpDir);
   // or serve with
   // await bundler.serve();
 }

@@ -62,4 +62,5 @@ typings/
 
 # Stork build output
 .cache
+.tmp
 dist
