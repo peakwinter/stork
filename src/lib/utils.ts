@@ -1,6 +1,7 @@
 import dashify from 'dashify';
 import fs from 'fs-extra';
 import grayMatter from 'gray-matter';
+import moment from 'moment';
 import path from 'path';
 import { Config, Helpers, Plugins } from './config';
 
@@ -8,6 +9,7 @@ export interface RenderingContext {
   config?: Config;
   helpers: Helpers;
   page: Object;
+  post: PostData | object;
   posts: PostData[];
 }
 
@@ -15,7 +17,7 @@ export interface PostData {
   slug: string;
   title: string;
   summary: string;
-  date: Date;
+  date: moment.Moment;
   permalink: string;
 }
 
@@ -32,7 +34,7 @@ export function getRenderingContext(
     }
     return agg;
   },                                             {} as Helpers);
-  return { config, helpers, posts, page: frontMatter };
+  return { config, helpers, posts, page: frontMatter, post: frontMatter };
 }
 
 export async function getPostDataRenderingContext(
@@ -49,7 +51,7 @@ export async function getPostDataRenderingContext(
     slug,
     title,
     summary: data.summary || '',
-    date: data.date || fileStats.birthtime,
+    date: data.date ? moment(data.date) : moment(fileStats.birthtime),
     permalink: data.permalink || `/${config.permalinkPrefix || 'blog'}/${slug}`,
   };
 }

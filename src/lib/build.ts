@@ -3,19 +3,25 @@ import glob from 'fast-glob';
 import path from 'path';
 import Bundler from 'parcel-bundler';
 
-import { loadConfig, loadPlugins } from './config';
+import { loadConfig, loadPlugins, Config } from './config';
 import { buildPug } from './assets/pug';
 import { buildMarkdown } from './assets/markdown';
 
 /** Build the site. */
-export default async function build(sitePath: string) {
+export default async function build(
+  sitePath: string, config: Config = {}, parcelOptions: Bundler.ParcelOptions = {},
+) {
   const absolutePath = path.resolve(sitePath);
   const outDir = path.join(absolutePath, 'dist');
+  const prod = config.env === 'production' || process.env.NODE_ENV === 'production' || false;
   await fs.ensureDir(outDir);
 
   // Load config and plugins
-  const configPath = path.join(sitePath, 'stork.yaml');
-  const config = await loadConfig(configPath, sitePath);
+  let storkConfig = config;
+  if (!storkConfig) {
+    const configPath = path.join(sitePath, 'stork.yaml');
+    storkConfig = await loadConfig(configPath, sitePath);
+  }
   const plugins = await loadPlugins(config);
 
   // Fetch paths for building pug pages (index and site pages)
@@ -52,11 +58,12 @@ export default async function build(sitePath: string) {
     outDir,
     cache: false,
     watch: false,
-    contentHash: false,
-    minify: false,
+    contentHash: prod,
+    minify: prod,
     logLevel: 3,
     hmrPort: 0,
-    sourceMaps: true,
+    sourceMaps: !!prod,
+    ...parcelOptions,
   };
 
   const bundler = new Bundler(entryFiles, options);

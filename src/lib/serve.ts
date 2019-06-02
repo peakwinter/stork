@@ -3,16 +3,22 @@ import http from 'http';
 import path from 'path';
 import serveStatic from 'serve-static';
 import watch from 'glob-watcher';
+import { Request, Response } from 'express-serve-static-core';
+import { ParcelOptions } from 'parcel-bundler';
 
 import build from './build';
-import { Request, Response } from 'express-serve-static-core';
+import { loadConfig } from './config';
 
 export default async function serve(sitePath: string) {
   const absolutePath = path.resolve(sitePath);
   const outDir = path.join(absolutePath, 'dist');
+  const configPath = path.join(sitePath, 'stork.yaml');
+  const config = await loadConfig(configPath, sitePath);
+  const port = config.serverPort || 3000;
 
-  await build(sitePath);
-  console.log('');
+  const parcelOptions: ParcelOptions = { cache: true, logLevel: 2 };
+
+  await build(sitePath, config, parcelOptions);
 
   const globs = [
     path.join(absolutePath, 'index.pug'),
@@ -23,8 +29,8 @@ export default async function serve(sitePath: string) {
   ];
 
   const watcher = watch(globs, async() => {
-    await build(sitePath);
-    console.log('');
+    await build(sitePath, config, parcelOptions);
+    console.log('Rebuild complete');
   });
   watcher.on('change', (path) => {
     console.log(`${path} updated - rebuilding`);
@@ -35,6 +41,7 @@ export default async function serve(sitePath: string) {
     serve(req, res, finalhandler(req, res)),
   );
 
-  console.log('Now listening on http://localhost:3000');
-  server.listen(3000);
+  console.log('');
+  console.log(`Now listening on http://localhost:${port}`);
+  server.listen(port);
 }

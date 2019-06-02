@@ -39,6 +39,9 @@ export interface Config {
 
   permalinkPrefix?: string;
   plugins?: string[];
+
+  serverPort?: number;
+
   [configAttr: string]: any;
 }
 

@@ -922,6 +922,11 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
+"@types/highlight.js@^9.12.3":
+  version "9.12.3"
+  resolved "https://registry.yarnpkg.com/@types/highlight.js/-/highlight.js-9.12.3.tgz#b672cfaac25cbbc634a0fd92c515f66faa18dbca"
+  integrity sha512-pGF/zvYOACZ/gLGWdQH8zSwteQS1epp68yRcVLJMgUck/MjEn/FBYmPub9pXT8C1e4a8YZfHo1CKyV8q1vKUnQ==
+
 "@types/js-yaml@^3.12.0":
   version "3.12.0"
   resolved "https://registry.yarnpkg.com/@types/js-yaml/-/js-yaml-3.12.0.tgz#3494ce97358e2675e24e97a747ec23478eeaf8b6"
@@ -948,6 +953,13 @@
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
   integrity sha512-tHq6qdbT9U1IRSGf14CL0pUlULksvY9OZ+5eEgl1N7t+OA3tGvNpxJCzuKQlsNgCVwbAs670L1vcVQi8j9HjnA==
+
+"@types/moment@^2.13.0":
+  version "2.13.0"
+  resolved "https://registry.yarnpkg.com/@types/moment/-/moment-2.13.0.tgz#604ebd189bc3bc34a1548689404e61a2a4aac896"
+  integrity sha1-YE69GJvDvDShVIaJQE5hoqSqyJY=
+  dependencies:
+    moment "*"
 
 "@types/node@*":
   version "11.12.0"
@@ -3099,6 +3111,11 @@ hex-color-regex@^1.1.0:
   resolved "https://registry.yarnpkg.com/hex-color-regex/-/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"
   integrity sha512-l9sfDFsuqtOqKDsQdqrMRk0U85RZc0RtOR9yPI7mRVOa4FsR/BVnZ0shmQRM96Ji99kYZP/7hn1cedc1+ApsTQ==
 
+highlight.js@^9.15.8:
+  version "9.15.8"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-9.15.8.tgz#f344fda123f36f1a65490e932cf90569e4999971"
+  integrity sha512-RrapkKQWwE+wKdF73VsOa2RQdIoO3mxwJ4P8mhbI6KYJUraUHRKM5w5zQQKXNk0xNL4UVRdulV9SBJcmzJNzVA==
+
 hmac-drbg@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/hmac-drbg/-/hmac-drbg-1.0.1.tgz#d2745701025a6c775a6c545793ed502fc0c649a1"
@@ -3914,6 +3931,16 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
+markdown-it-attrs@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/markdown-it-attrs/-/markdown-it-attrs-2.4.1.tgz#4868d067b0615568afc027bb99dfa2badb7ca1bc"
+  integrity sha512-BASnIYS+JLpjlhDf7jLV8VOuccxjfDDnQcz5dLfgPsYw8OsgbASexADdIkF7tIdGn+jaQSA4qOZXM3v3W3JBCg==
+
+markdown-it-footnote@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/markdown-it-footnote/-/markdown-it-footnote-3.0.1.tgz#7f3730747cacc86e2fe0bf8a17a710f34791517a"
+  integrity sha1-fzcwdHysyG4v4L+KF6cQ80eRUXo=
+
 markdown-it@^8.4.2:
   version "8.4.2"
   resolved "https://registry.yarnpkg.com/markdown-it/-/markdown-it-8.4.2.tgz#386f98998dc15a37722aa7722084f4020bdd9b54"
@@ -4066,6 +4093,11 @@ mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkdirp@~0.5.1:
   integrity sha1-MAV0OOrGz3+MR2fzhkjWaX11yQM=
   dependencies:
     minimist "0.0.8"
+
+moment@*, moment@^2.24.0:
+  version "2.24.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
+  integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
 
 ms@2.0.0:
   version "2.0.0"
