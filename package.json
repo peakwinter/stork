@@ -14,6 +14,7 @@
     "@oclif/command": "^1.5.12",
     "@oclif/config": "^1.12.12",
     "@oclif/plugin-help": "^2.1.6",
+    "dashify": "^2.0.0",
     "fast-glob": "^2.2.6",
     "finalhandler": "^1.1.2",
     "fs-extra": "^7.0.1",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@oclif/dev-cli": "^1.22.0",
     "@oclif/tslint": "^3.1.1",
+    "@types/dashify": "^1.0.0",
     "@types/finalhandler": "^1.1.0",
     "@types/fs-extra": "^5.0.5",
     "@types/glob-watcher": "^5.0.0",

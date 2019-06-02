@@ -30,12 +30,14 @@ export default async function build(sitePath: string) {
   await fs.remove(tmpDir);
   await fs.ensureDir(tmpDir);
 
-  // Build pug pages
-  console.log('Building index and pages...');
-  await buildPug(pugPaths, { config, plugins, baseDir: absolutePath, outputDir: tmpDir });
   // Build Markdown pages
   console.log('Building blog posts...');
-  await buildMarkdown(mdPaths, { config, plugins, baseDir: absolutePath, outputDir: tmpDir });
+  const postData = await buildMarkdown(
+    mdPaths, { config, plugins, baseDir: absolutePath, outputDir: tmpDir },
+  );
+  // Build pug pages
+  console.log('Building index and pages...');
+  await buildPug(pugPaths, postData, { config, plugins, baseDir: absolutePath, outputDir: tmpDir });
 
   // Symlink assets into tmp dir so Parcel will properly link them
   await fs.symlink(path.join(absolutePath, 'assets'), path.join(tmpDir, 'assets'));
@@ -63,6 +65,4 @@ export default async function build(sitePath: string) {
   await bundler.bundle();
 
   await fs.remove(tmpDir);
-  // or serve with
-  // await bundler.serve();
 }

@@ -3,7 +3,7 @@ import path from 'path';
 import pLimit from 'p-limit';
 import pug from 'pug';
 
-import { getRenderingContext, RenderingContext } from '../utils';
+import { getRenderingContext, RenderingContext, PostData } from '../utils';
 import { BuildOptions } from '../config';
 
 export async function buildPugFile(
@@ -30,9 +30,11 @@ export async function buildPugFile(
   await fs.writeFile(path.join(outputFilePath), compiled);
 }
 
-export async function buildPug(paths: string[], options: BuildOptions) {
+export async function buildPug(
+  paths: string[], postData: PostData[] | null, options: BuildOptions,
+) {
   const pugPool = pLimit(3);
-  const context = getRenderingContext(options.config, options.plugins);
+  const context = getRenderingContext(options.config, options.plugins, {}, postData || []);
   const input = paths.map(filePath =>
     pugPool(() => buildPugFile(filePath, options.baseDir, options.outputDir, context)),
   );

@@ -11,8 +11,12 @@ export default async function serve(sitePath: string) {
   const absolutePath = path.resolve(sitePath);
   const outDir = path.join(absolutePath, 'dist');
 
+  await build(sitePath);
+  console.log('');
+
   const globs = [
     path.join(absolutePath, 'index.pug'),
+    path.join(absolutePath, 'templates/**/*.pug'),
     path.join(absolutePath, 'pages/**/*.pug'),
     path.join(absolutePath, 'posts/**/*.md'),
     path.join(absolutePath, 'assets/**/*'),
@@ -20,6 +24,7 @@ export default async function serve(sitePath: string) {
 
   const watcher = watch(globs, async() => {
     await build(sitePath);
+    console.log('');
   });
   watcher.on('change', (path) => {
     console.log(`${path} updated - rebuilding`);
@@ -30,6 +35,6 @@ export default async function serve(sitePath: string) {
     serve(req, res, finalhandler(req, res)),
   );
 
-  console.log('Now listening on port 3000');
+  console.log('Now listening on http://localhost:3000');
   server.listen(3000);
 }

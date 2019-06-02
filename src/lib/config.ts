@@ -22,7 +22,7 @@ export interface Plugins {
 export interface BuildOptions {
   baseDir: string;
   outputDir: string;
-  config?: Config;
+  config: Config;
   plugins?: Plugins;
 }
 
@@ -37,10 +37,7 @@ export interface Config {
   };
   logo?: string;
 
-  blog?: {
-    permalink?: string;
-  };
-
+  permalinkPrefix?: string;
   plugins?: string[];
   [configAttr: string]: any;
 }
