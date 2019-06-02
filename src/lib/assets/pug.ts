@@ -16,15 +16,18 @@ export async function buildPugFile(
   const compiled = pug.renderFile(fullPath, {
     compileDebug: false,
     filename: filePath,
-    basedir: path.dirname(fullPath),
+    basedir: baseDir,
     pretty: true,
     filters: {},
     ...(context || {}),
   });
-  await fs.ensureDir(path.join(outputDir, path.dirname(filePath)));
-  await fs.writeFile(
-    path.join(outputDir, filePath.replace(path.extname(filePath), '.html')), compiled,
-  );
+  const outputFilePath = filePath.startsWith('./pages')
+    ? path.join(
+        outputDir, filePath.replace('./pages', '.').replace(path.extname(filePath), '/index.html'),
+      )
+    : path.join(outputDir, path.basename(filePath).replace(path.extname(filePath), '.html'));
+  await fs.ensureDir(path.dirname(outputFilePath));
+  await fs.writeFile(path.join(outputFilePath), compiled);
 }
 
 export async function buildPug(paths: string[], options: BuildOptions) {

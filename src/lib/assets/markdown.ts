@@ -42,10 +42,11 @@ export async function buildMarkdownFile(
     });
   }
 
-  await fs.ensureDir(path.join(outputDir, path.dirname(filePath)));
-  await fs.writeFile(
-    path.join(outputDir, filePath.replace(path.extname(filePath), '.html')), compiled,
+  const outputFilePath = path.join(
+    outputDir, filePath.replace(path.extname(filePath), '/index.html'),
   );
+  await fs.ensureDir(path.dirname(outputFilePath));
+  await fs.writeFile(path.join(outputFilePath), compiled);
 }
 
 export async function buildMarkdown(paths: string[], options: BuildOptions) {

@@ -26,7 +26,7 @@ export default async function build(sitePath: string) {
   const mdPaths = await glob<string>('./posts/**/*.md', { cwd: sitePath, onlyFiles: true });
 
   // Create temporary directory for pre-processing Pug and Markdown files
-  const tmpDir = path.join(outDir, '.tmp');
+  const tmpDir = path.join(sitePath, '.tmp');
   await fs.remove(tmpDir);
   await fs.ensureDir(tmpDir);
 
@@ -43,8 +43,8 @@ export default async function build(sitePath: string) {
   // Build assets and final site package using Parcel
   const entryFiles = [
     path.join(tmpDir, './index.html'),
-    path.join(tmpDir, './pages/**/*.html'),
-    path.join(tmpDir, './posts/**/*.html'),
+    path.join(tmpDir, './*.html'),
+    path.join(tmpDir, './**/*.html'),
   ];
   const options: Bundler.ParcelOptions = {
     outDir,
